@@ -123,7 +123,7 @@ end
 
 class Dongle
   def initialize(logger=Logger.new(STDOUT), port='/dev/ttyUSB0')
-    @serial = SerialPort.new('/dev/ttyUSB0', :baudrate => 115200)
+    @serial = SerialPort.new('/dev/ttyUSB0', 115200, 8, 1, SerialPort::NONE)
     @logger = logger
   end
 
