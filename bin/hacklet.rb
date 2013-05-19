@@ -172,7 +172,7 @@ class Dongle
 private
   def transmit(command)
     @logger.debug("TX: #{command}")
-    @serial.write(pack(command)) if @serial
+    @serial.write(pack(command.to_s)) if @serial
   end
 
   def receive(bytes)
