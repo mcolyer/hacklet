@@ -104,6 +104,15 @@ module Requests
     end
   end
 
+  class Handshake < Base
+    # TX packet: 02[40][03][04][A7B4]0500[]
+    def initialize(network, channel_id)
+      # FIXME: The checksum is somehow influenced by the channel id and
+      # possibly the network but I can't figure out how.
+      @data = "02 40 03 04 #{network} 05 00 51"
+    end
+  end
+
   class Samples < Base
     # TX packet: 02[40][2406][A7B4][0001][0A][00][7B]
     # 1 - header
@@ -157,6 +166,14 @@ class Dongle
     Responses::Lock.new(receive(6))
   end
 
+  # Public: Required initialization step.
+  #
+  # Don't really have a good guess of what this does, maybe selects the network?
+  def handshake(network)
+    transmit(Requests::Handshake.new(network))
+    Responses::Ack.new(receive(6))
+  end
+
   # Public: Request stored samples.
   #
   # Returns the Responses::Samples
@@ -207,6 +224,7 @@ logger.info("Booting complete")
 logger.info("Locking network")
 dongle.lock_network
 logger.info("Locking complete")
+dongle.handshake('A7 B4')
 logger.info("Requesting samples")
 dongle.request_samples('A7 B4', '00 01')
 logger.info("Samples recieved")
