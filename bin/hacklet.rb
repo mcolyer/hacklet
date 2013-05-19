@@ -105,8 +105,8 @@ module Requests
   end
 
   class Handshake < Base
-    # TX packet: 02[40][03][04][A7B4]0500[]
-    def initialize(network, channel_id)
+    # TX packet: 02[40][03][04][A7B4]0500[51]
+    def initialize(network)
       # FIXME: The checksum is somehow influenced by the channel id and
       # possibly the network but I can't figure out how.
       @data = "02 40 03 04 #{network} 05 00 51"
@@ -125,7 +125,7 @@ module Requests
     def initialize(network, channel_id)
       # FIXME: The checksum is somehow influenced by the channel id and
       # possibly the network but I can't figure out how.
-      @data = "02 40 24 06 #{network} 00 01 0A 00 7B"
+      @data = "02 40 24 06 #{network} 00 01 0A 00 7A"
     end
   end
 end
@@ -181,7 +181,7 @@ class Dongle
     transmit(Requests::Samples.new(network, channel_id))
     Responses::Ack.new(receive(6))
     buffer = receive(4)
-    remaining_bytes = buffer[3].unpack('c')
+    remaining_bytes = buffer[3].unpack('c')[0]
     buffer += receive(remaining_bytes)
     Responses::Samples.new(buffer)
   end
