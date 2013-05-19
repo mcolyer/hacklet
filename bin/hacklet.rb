@@ -76,33 +76,47 @@ module Requests
   end
 
   class Boot < Base
+    # TX packet: 02[40][04][00][44]
+    # 1 - header
+    # 2 - command (query)
+    # 3 - payload byte size
+    # 4 - checksum
     def initialize
-      @data = '40 04 00 44'
+      @data = '02 40 04 00 44'
     end
   end
 
   class BootConfirm < Base
+    # TX packet: 02[40][00][00][40]
+    # 1 - header
+    # 2 - command (query)
+    # 3 - payload byte size
+    # 4 - checksum
     def initialize
-      @data = '40 00 00'
+      @data = '02 40 00 00 40'
     end
   end
 
   class Lock < Base
+    # TX packet: 02A23604FCFF000192
     def initialize
-      @data = 'A2 36 04 FC FF 00 01'
+      @data = '02 A2 36 04 FC FF 00 01 92'
     end
   end
 
   class Samples < Base
-    # TX packet: [40][2406][A7B4][0001][0A][00]
+    # TX packet: 02[40][2406][A7B4][0001][0A][00][7B]
     # 1 - header
     # 2 - command (query)
     # 3 - network id
     # 4 - channel id
     # 5 - ?
-    # 6 - null byte
+    # 6 - payload byte size
+    # 7 - unknown checksum algorithm
     def initialize(network, channel_id)
-      @data = "40 24 06 #{network} #{channel_id} 0A 00"
+      # FIXME: The checksum is somehow influenced by the channel id and
+      # possibly the network but I can't figure out how.
+      @data = "02 40 24 06 #{network} 00 01 0A 00 7B"
     end
   end
 end
@@ -157,13 +171,16 @@ class Dongle
 
 private
   def transmit(command)
-    command = "02 #{command}"
     @logger.debug("TX: #{command}")
-    @serial.write(pack(command))
+    @serial.write(pack(command)) if @serial
   end
 
   def receive(bytes)
-    response = @serial.read(bytes)
+    if @serial
+      response = @serial.read(bytes)
+    else
+      response = "\x0\x0\x0\x0"
+    end
     @logger.debug("RX: #{unpack(response)}")
 
     unpack(response).join(' ')
