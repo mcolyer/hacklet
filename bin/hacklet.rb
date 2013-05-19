@@ -181,7 +181,7 @@ private
     else
       response = "\x0\x0\x0\x0"
     end
-    @logger.debug("RX: #{unpack(response)}")
+    @logger.debug("RX: #{unpack(response).join(' ')}")
 
     unpack(response).join(' ')
   end
