@@ -134,7 +134,7 @@ class Dongle
   # Returns the BootResponse
   def boot
     transmit(Requests::Boot.new)
-    Responses::Boot.new(receive(29))
+    Responses::Boot.new(receive(27))
   end
 
   # Public: Confirms that booting was successful?
