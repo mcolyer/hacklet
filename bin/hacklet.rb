@@ -134,7 +134,7 @@ class Dongle
   # Returns the BootResponse
   def boot
     transmit(Requests::Boot.new)
-    Responses::Boot.new(receive(27))
+    Responses::Boot.new(receive(29))
   end
 
   # Public: Confirms that booting was successful?
@@ -144,7 +144,7 @@ class Dongle
   # Returns the BootConfirmResponse
   def boot_confirm
     transmit(Requests::BootConfirm.new)
-    Responses::BootConfirm.new(receive(4))
+    Responses::BootConfirm.new(receive(6))
   end
 
   # Public: Locks the network.
@@ -154,7 +154,7 @@ class Dongle
   # Returns the BootConfirmResponse
   def lock_network
     transmit(Requests::Lock.new)
-    Responses::Lock.new(receive(4))
+    Responses::Lock.new(receive(6))
   end
 
   # Public: Request stored samples.
@@ -162,9 +162,9 @@ class Dongle
   # Returns the Responses::Samples
   def request_samples(network, channel_id)
     transmit(Requests::Samples.new(network, channel_id))
-    Responses::Ack.new(receive(4))
-    buffer = receive(3)
-    remaining_bytes = buffer[2].unpack('c')
+    Responses::Ack.new(receive(6))
+    buffer = receive(4)
+    remaining_bytes = buffer[3].unpack('c')
     buffer += receive(remaining_bytes)
     Responses::Samples.new(buffer)
   end
