@@ -181,7 +181,7 @@ class Dongle
     transmit(Requests::Samples.new(network, channel_id))
     Responses::Ack.new(receive(6))
     buffer = receive(4)
-    remaining_bytes = buffer[3].unpack('c')[0]
+    remaining_bytes = buffer.split(' ')[3].to_i(16)+1
     buffer += receive(remaining_bytes)
     Responses::Samples.new(buffer)
   end
