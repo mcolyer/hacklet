@@ -12,40 +12,45 @@ module Responses
     # It's unclear what useful information is in here.
     #
     # Example Response:
-    # [40][84][16][3962850049687596436A][0B2F000000584F80][0A1C]
+    # [02][40][84][16][3962850049687596436A][0B2F000000584F80][0A1C][XX]
     #
     # 1 - Header
-    # 2 - Command
-    # 3 - Payload size - the number of bytes following this.
-    # 4 - ?
-    # 5 - Device Id
-    # 6 - ?
+    # 2 - Mode
+    # 3 - Command
+    # 4 - Payload size - the number of bytes following this.
+    # 5 - ?
+    # 6 - Device Id
+    # 7 - XOR checksum
   end
 
   class BootConfirm < Base
     # I really don't know what this is for.
     #
-    # RX packet: [40][80][01][10]
-    # 1 - header
-    # 2 - command
-    # 3 - payload size - the number of bytes following this.
-    # 4 - ?
+    # RX packet: [02][40][80][01][10][XX]
+    # 1 - Header
+    # 2 - mode
+    # 3 - command
+    # 4 - payload size - the number of bytes following this.
+    # 5 - ?
+    # 6 - XOR checksum
   end
 
   class Lock < Base
     # I really don't know what this is for.
     #
-    # RX packet: [A0][F9][01][00]
+    # RX packet: [02][A0][F9][01][00][XX]
     # 1 - header
-    # 2 - command
-    # 3 - payload size - the number of bytes following this.
-    # 4 - ?
+    # 2 - mode
+    # 3 - command
+    # 4 - payload size - the number of bytes following this.
+    # 5 - ?
+    # 6 - XOR checksum
   end
 
   class Ack < Base
     # I think this is an acknowledgement packet.
     #
-    # RX packet: [40][24][01][00]
+    # RX packet: [02][40][24][01][00][XX]
     # 1 - header
     # 2 - command
     # 3 - payload size - the number of bytes following this.
@@ -53,8 +58,9 @@ module Responses
   end
 
   class Samples < Base
-    # RX packet: [40][A4][10][A7B4][0001][0A00][55E09751][01][000000][0000] - 19 bytes
+    # RX packet: [02][40][A4][10][A7B4][0001][0A00][55E09751][0100][0000][0000][XX]
     # 1 - header
+    # 1 - mode
     # 2 - command
     # 3 - payload size - the number of bytes following this.
     # 3 - network id "NwkAdr"
@@ -65,6 +71,7 @@ module Responses
     # 9 - stored number of readings (little endian)
     # 10 - reading 1 watts * 13 (I don't get the use of 13 here) (little endian) - 2 bytes
     # 11 - (additional readings are appended upto 20)
+    # 12 - XOR checksum
   end
 end
 
@@ -78,9 +85,10 @@ module Requests
   class Boot < Base
     # TX packet: 02[40][04][00][44]
     # 1 - header
+    # 1 - mode
     # 2 - command (query)
     # 3 - payload byte size
-    # 4 - checksum
+    # 4 - XOR checksum
     def initialize
       @data = '02 40 04 00 44'
     end
@@ -89,6 +97,7 @@ module Requests
   class BootConfirm < Base
     # TX packet: 02[40][00][00][40]
     # 1 - header
+    # 1 - mode
     # 2 - command (query)
     # 3 - payload byte size
     # 4 - checksum
@@ -98,7 +107,9 @@ module Requests
   end
 
   class Lock < Base
-    # TX packet: 02A23604FCFF000192
+    # TX packet: [02]A23604FCFF0001[92]
+    # 1 - header
+    # 4 - checksum
     def initialize
       @data = '02 A2 36 04 FC FF 00 01 92'
     end
@@ -106,9 +117,14 @@ module Requests
 
   class Handshake < Base
     # TX packet: 02[40][03][04][A7B4]0500[51]
+    # 1 - header
+    # 1 - mode
+    # 1 - command
+    # 1 - payload length
+    # 1 - network
+    # 1 - ?
+    # 1 - XOR checksum
     def initialize(network)
-      # FIXME: The checksum is somehow influenced by the channel id and
-      # possibly the network but I can't figure out how.
       @data = "02 40 03 04 #{network} 05 00 51"
     end
   end
@@ -116,12 +132,13 @@ module Requests
   class Samples < Base
     # TX packet: 02[40][2406][A7B4][0001][0A][00][7B]
     # 1 - header
+    # 1 - mode
     # 2 - command (query)
     # 3 - network id
     # 4 - channel id
     # 5 - ?
     # 6 - payload byte size
-    # 7 - unknown checksum algorithm
+    # 7 - checksum
     def initialize(network, channel_id)
       # FIXME: The checksum is somehow influenced by the channel id and
       # possibly the network but I can't figure out how.
