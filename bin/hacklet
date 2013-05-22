@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
+$LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
+
+require 'hacklet'
+require 'logger'
+
+logger = Logger.new(STDOUT)
+logger.level = Logger::DEBUG
+dongle = Hacklet::Dongle.new(logger)
+
+dongle.open_session do |session|
+  session.select_network(0xA7B4)
+  session.request_samples(0xA7B4, 0x0001)
+end
