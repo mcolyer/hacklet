@@ -1,0 +1,57 @@
+require 'bundler'
+Bundler::GemHelper.install_tasks
+
+module Bundler
+  class GemHelper
+    # Override Bundler's concept of release.
+    def release_gem
+      with_fixed_editor {
+        guard_on_master_branch
+        guard_already_tagged
+        build_gem
+        edit_changelog
+        sh "git commit --allow-empty -a -m 'Release #{version_tag}'"
+        tag_version {
+          # Bundler's git_push pushes all branches. Let's restrict it
+          # to only the master branch since we also ensure that you
+          # always release from the master branch.
+          perform_git_push "origin master --tags"
+        }
+      }
+    end
+    def with_fixed_editor
+      editor = ENV['EDITOR'] || ""
+      abort "You must set an EDITOR to edit the changelog" if editor.empty?
+      swaps = {
+        "mate" => "mate -w",
+        "subl" => "subl -w"
+      }
+      begin
+        ENV['EDITOR'] = swaps.fetch(editor, editor)
+        yield
+      ensure
+        ENV['EDITOR'] = editor
+      end
+    end
+    def guard_on_master_branch
+      unless `git branch` =~ /^\* master$/
+        abort "You must be on the master branch to release."
+      end
+    end
+    def edit_changelog
+      unless `which git-changelog`.empty?
+        sh "git-changelog"
+      else
+        abort "git-changelog isn't found. Install it with `brew install git-extras`"
+      end
+    end
+  end
+end
+
+desc "Run all tests"
+task :default => :test
+
+desc "Update Rakefile.base"
+task :selfupdate do
+  sh "curl -sO https://raw.github.com/rcarver/gembase/master/Rakefile.base"
+end

@@ -1,3 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'serialport'
+# Specify your gem's dependencies in hacklet.gemspec
+gemspec
