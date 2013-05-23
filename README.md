@@ -1,4 +1,4 @@
-# Hacklet
+# Hacklet [![Build Status](https://travis-ci.org/mcolyer/hacklet.png)](https://travis-ci.org/mcolyer/hacklet)
 
 A library, written in Ruby, for controlling the [Modlet] (smart) outlet.
 
