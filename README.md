@@ -49,4 +49,4 @@ configured into a network you can use hacklet to monitor their data and
 control them as you choose.
 
 [Modlet]: http://themodlet.com
-[amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/
+[amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/
