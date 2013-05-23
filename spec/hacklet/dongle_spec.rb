@@ -65,8 +65,8 @@ describe Hacklet::Dongle do
     serial_port.should_receive(:read).and_return([0x02, 0x40, 0x03, 0x01, 0x00, 0x42].pack('c'*6))
 
     # Switching
-    request = [0x7f]*56
-    request[5] = 0x25
+    request = [0xff]*56
+    request[5] = 0xA5
     request = [0x02, 0x40, 0x23, 0x3B, 0xA7, 0xB4, 0x00] + request + [0x11]
     serial_port.should_receive(:write).with(request.pack('c'*request.length))
     serial_port.should_receive(:read).and_return([0x02, 0x40, 0x23, 0x01, 0x00, 0x62].pack('c'*6))
