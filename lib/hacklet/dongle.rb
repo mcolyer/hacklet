@@ -114,8 +114,10 @@ module Hacklet
 
     # Private: Initializes the serial port
     #
+    # port - the String to the device to open as a serial port.
+    #
     # Returns a SerialPort object.
-    def open_serial_port
+    def open_serial_port(port)
       SerialPort.new(port, 115200, 8, 1, SerialPort::NONE)
     end
 
