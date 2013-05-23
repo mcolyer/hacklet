@@ -54,4 +54,31 @@ describe Hacklet::Dongle do
       session.request_samples(0xA7B4, 0x0001)
     end
   end
+
+  it 'can enable a socket' do
+    serial_port = mock("SerialPort")
+
+    # Selecting the network
+    serial_port.should_receive(:write).with([0x02, 0x40, 0x03, 0x04, 0xA7, 0xB4, 0x05, 0x00, 0x51].pack('c'*9))
+    serial_port.should_receive(:read).and_return([0x02, 0x40, 0x03, 0x01, 0x00, 0x42].pack('c'*6))
+
+    # Switching
+    request = [0x7f]*56
+    request[5] = 0x25
+    request = [0x02, 0x40, 0x23, 0x3B, 0xA7, 0xB4, 0x00] + request + [0x11]
+    serial_port.should_receive(:write).with(request.pack('c'*request.length))
+    serial_port.should_receive(:read).and_return([0x02, 0x40, 0x23, 0x01, 0x00, 0x62].pack('c'*6))
+
+    serial_port.should_receive(:close)
+    serial_port.stub!(:closed?).and_return(false)
+    subject.should_receive(:open_serial_port).and_return(serial_port)
+    subject.should_receive(:boot)
+    subject.should_receive(:boot_confirm)
+    subject.should_receive(:lock_network)
+
+    subject.open_session do |session|
+      session.select_network(0xA7B4)
+      session.switch(0xA7B4, 0x0000, true)
+    end
+  end
 end

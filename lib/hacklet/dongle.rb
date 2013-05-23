@@ -63,6 +63,26 @@ module Hacklet
       SamplesResponse.read(buffer)
     end
 
+    # Public: Used to controls whether a socket is on or off.
+    #
+    # network_id - 2 byte identified for the network.
+    # channel_id - 1 byte identified for the channel.
+    # enabled    - true enables the socket and false disables it.
+    #
+    # Returns the SwitchResponse.
+    def switch(network_id, channel_id, state)
+      require_session
+
+      request = ScheduleRequest.new(:network_id => network_id, :channel_id => channel_id)
+      if state
+        request.always_on!
+      else
+        request.always_off!
+      end
+      transmit(request)
+      ScheduleResponse.read(receive(6))
+    end
+
   private
     # Private: Initializes the dongle for communication
     #

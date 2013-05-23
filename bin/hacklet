@@ -12,5 +12,6 @@ dongle = Hacklet::Dongle.new(logger)
 
 dongle.open_session do |session|
   session.select_network(0xA7B4)
-  session.request_samples(0xA7B4, 0x0001)
+  #session.request_samples(0xA7B4, 0x0001)
+  session.switch(0xA7B4, 0x0000, true)
 end

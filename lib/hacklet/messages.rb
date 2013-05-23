@@ -101,6 +101,18 @@ module Hacklet
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
+  class ScheduleResponse < Message
+    endian :big
+
+    uint8  :header, :check_value => lambda { value == 0x02 }
+    uint16 :command, :check_value => lambda { value == 0x4023 }
+    uint8  :payload_length, :check_value => lambda { value == 1 }
+
+    uint8be :data, :check_value => lambda { value == 0x00 }
+
+    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+  end
+
   class BootRequest < Message
     endian :big
 
@@ -161,5 +173,31 @@ module Hacklet
     uint16 :data, :initial_value => 0x0A00
 
     uint8 :checksum, :value => :calculate_checksum
+  end
+
+  class ScheduleRequest < Message
+    endian :big
+
+    uint8  :header, :initial_value => 0x02
+    uint16 :command, :initial_value => 0x4023
+    uint8  :payload_length, :initial_value => 59
+
+    uint16 :network_id
+    uint8  :channel_id
+    array  :schedule, :type => [:uint8], :initial_length => 56
+
+    uint8 :checksum, :value => :calculate_checksum
+
+    def always_on!
+      bitmap = [0x7f]*56
+      bitmap[5] = 0x25
+      schedule.assign(bitmap)
+    end
+
+    def always_off!
+      bitmap = [0xff]*56
+      bitmap[5] = 0xa5
+      schedule.assign(bitmap)
+    end
   end
 end
