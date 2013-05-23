@@ -79,7 +79,7 @@ module Hacklet
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
-  class SampleResponse < Message
+  class SamplesResponse < Message
     endian :big
 
     uint8  :header, :check_value => lambda { value == 0x02 }

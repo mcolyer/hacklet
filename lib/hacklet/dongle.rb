@@ -58,7 +58,7 @@ module Hacklet
       transmit(SamplesRequest.new(:network_id => network_id, :channel_id => channel_id))
       AckResponse.read(receive(6))
       buffer = receive(4)
-      remaining_bytes = buffer.split(' ')[3].to_i(16)+1
+      remaining_bytes = buffer.bytes.to_a[3] + 1
       buffer += receive(remaining_bytes)
       SamplesResponse.read(buffer)
     end
