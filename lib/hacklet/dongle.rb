@@ -50,7 +50,8 @@ module Hacklet
     # network_id - 2 byte identified for the network.
     # channel_id - 2 byte identified for the channel.
     #
-    # Returns the Responses::Samples
+    # TODO: This needs to return a more usable set of data.
+    # Returns the SamplesResponse.
     def request_samples(network_id, channel_id)
       require_session
 
@@ -63,13 +64,6 @@ module Hacklet
     end
 
   private
-    # Private: Initializes the serial port
-    #
-    # Returns a SerialPort object.
-    def open_serial_port
-      SerialPort.new(port, 115200, 8, 1, SerialPort::NONE)
-    end
-
     # Private: Initializes the dongle for communication
     #
     # Returns the BootResponse
@@ -98,11 +92,29 @@ module Hacklet
       LockResponse.read(receive(6))
     end
 
+    # Private: Initializes the serial port
+    #
+    # Returns a SerialPort object.
+    def open_serial_port
+      SerialPort.new(port, 115200, 8, 1, SerialPort::NONE)
+    end
+
+    # Private: Transmits the packet to the dongle.
+    #
+    # command - The binary string to send.
+    #
+    # Returns the number of bytes written.
     def transmit(command)
       @logger.debug("TX: #{unpack(command.to_binary_s).inspect}")
       @serial.write(command.to_binary_s) if @serial
     end
 
+    # Private: Waits and receives the specified number of packets from the
+    # dongle.
+    #
+    # bytes - The number of bytes to read.
+    #
+    # Returns a binary string containing the response.
     def receive(bytes)
       if @serial
         response = @serial.read(bytes)
@@ -114,10 +126,19 @@ module Hacklet
       response
     end
 
+    # Private: Prints a binary string a concise hexidecimal form for debugging
+    #
+    # message - The message to parse.
+    #
+    # Returns a string of hexidecimal representing equivalent to the message.
     def unpack(message)
       message.unpack('H2'*message.size)
     end
 
+    # Private: A helper to ensure that the serial port is active.
+    #
+    # Returns nothing.
+    # Raises RuntimeError if the serial port is not active.
     def require_session
       raise RuntimeError.new("Must be executed within an open session") unless @serial && !@serial.closed?
     end
