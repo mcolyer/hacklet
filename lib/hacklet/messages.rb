@@ -185,13 +185,13 @@ module Hacklet
 
     uint8 :checksum, :value => :calculate_checksum
 
-    def always_on!
+    def always_off!
       bitmap = [0x7f]*56
       bitmap[5] = 0x25
       schedule.assign(bitmap)
     end
 
-    def always_off!
+    def always_on!
       bitmap = [0xff]*56
       bitmap[5] = 0xa5
       schedule.assign(bitmap)
