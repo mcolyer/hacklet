@@ -7,14 +7,11 @@ module Hacklet
       buffer = StringIO.new
       io = BinData::IO.new(buffer)
       checksum_fields.each do |field|
-        puts field
         send(field).do_write(io)
       end
       buffer.rewind
 
-      a = buffer.read.bytes.inject(0) { |s,x| s^x }
-      puts a.to_s(16)
-      a
+      buffer.read.bytes.inject(0) { |s,x| s^x }
     end
   end
 
