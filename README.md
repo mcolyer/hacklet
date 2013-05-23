@@ -1,14 +1,14 @@
 # Hacklet
 
-A daemon, written in ruby, for controlling the [Modlet] (smart) outlet.
+A library, written in Ruby, for controlling the [Modlet] (smart) outlet.
 
-If you haven't heard of the modlet before, it's a smart outlet cover
+If you haven't heard of the Modlet before, it's a smart outlet cover
 which allows you to convert any outlet into your house into a smart
 outlet. This means that you can control whether a plug is on or off and
 you can also determine how much energy it's using.
 
 There are alot of other similar products but this is the first one that
-I've see that costs $50 and includes control as well as monitoring of
+I've see that [costs $50][amazon] and includes control as well as monitoring of
 the independent sockets.
 
 ## Why
@@ -23,16 +23,30 @@ The goal of this project is provide all the same functionality of the
 bundled client but do it in a lightweight manner, to provide total
 control and availability of the data.
 
+## Getting Started
+
+Right now things are pretty rough and won't work without modifying
+`bin/hacklet`. Eventually the `hacklet` script will allow for specifying
+which Modlet and socket you'd like to read or control.
+
+```
+bundle install
+bin/hacklet
+```
+
 ## Status
 
-Currently it only supports reading data from configured clients. So
-you'll need to setup the modlets using the bundled software but once
-configured into a network you can use hacklet to monitor their data and
-analyze it as you choose.
+* Reading Data: Working
+* Controlling Sockets: Working
+* Useful utility: TODO
+* Multiple Modlet Support: (should be easy but need to get more than one)
+* Network Discovery: TODO
+* Commissioning New Devices: TODO
 
-## TODO
-* Implement reading data from modlets
-* Research/implement pairing process for new modlets
-* Research/implement controlling outlets
+Currently it only supports working with  a previously configured network. So
+you'll need to setup the Modlets using the bundled software but once
+configured into a network you can use hacklet to monitor their data and
+control them as you choose.
 
 [Modlet]: http://themodlet.com
+[amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/
