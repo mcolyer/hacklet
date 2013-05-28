@@ -20,14 +20,37 @@ describe Hacklet::Dongle do
     serial_port.should_receive(:write).with([0x02, 0x40, 0x00, 0x00, 0x40].pack('c'*5))
     serial_port.should_receive(:read).and_return([0x02, 0x40, 0x80, 0x01, 0x10, 0xd1].pack('c'*6))
 
+    serial_port.should_receive(:close)
+    subject.should_receive(:open_serial_port).and_return(serial_port)
+    subject.open_session do
+      # noop
+    end
+  end
+
+  it 'can find a new device' do
+    serial_port = mock("SerialPort")
+
+    # Unlock Network
+    serial_port.should_receive(:write).with([0x02, 0xA2, 0x36, 0x04, 0xFC, 0xFF, 0x90, 0x01, 0x02].pack('c'*9))
+    serial_port.should_receive(:read).and_return([0x02, 0xA0, 0xF9, 0x01, 0x00, 0x58].pack('c'*6))
+
+    # Listening for a response
+    serial_port.should_receive(:read_nonblock).and_return([0x20, 0xA0, 0x13, 0x0B, 0xA7, 0xB4, 0x0B, 0x1F, 0x10, 0x00, 0x00, 0x58, 0x4F, 0x80, 0x8E, 0x00].pack('c'*16))
+
     # Lock Network
     serial_port.should_receive(:write).with([0x02, 0xA2, 0x36, 0x04, 0xFC, 0xFF, 0x00, 0x01, 0x92].pack('c'*9))
     serial_port.should_receive(:read).and_return([0x02, 0xA0, 0xF9, 0x01, 0x00, 0x58].pack('c'*6))
 
     serial_port.should_receive(:close)
+    serial_port.stub!(:closed?).and_return(false)
     subject.should_receive(:open_serial_port).and_return(serial_port)
-    subject.open_session do
-      # noop
+    IO.should_receive(:select).and_return([[serial_port], [], []])
+    IO.should_receive(:select).exactly(9).times.and_return([[], [], []])
+    subject.should_receive(:boot)
+    subject.should_receive(:boot_confirm)
+
+    subject.open_session do |session|
+      session.commission
     end
   end
 
@@ -52,6 +75,7 @@ describe Hacklet::Dongle do
     subject.should_receive(:lock_network)
 
     subject.open_session do |session|
+      session.lock_network
       session.select_network(0xA7B4)
       session.request_samples(0xA7B4, 0x0001)
     end
@@ -79,6 +103,7 @@ describe Hacklet::Dongle do
     subject.should_receive(:lock_network)
 
     subject.open_session do |session|
+      session.lock_network
       session.select_network(0xA7B4)
       session.switch(0xA7B4, 0x0000, true)
     end

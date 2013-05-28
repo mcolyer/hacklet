@@ -130,6 +130,19 @@ module Hacklet
     uint8 :checksum, :value => :calculate_checksum
   end
 
+  class UnlockRequest < Message
+    endian :big
+
+    uint8  :header, :initial_value => 0x02
+    uint16 :command, :initial_value => 0xA236
+    uint8  :payload_length, :initial_value => 4
+
+    # TODO: What is this?
+    uint32 :data, :initial_value => 0xFCFF9001
+
+    uint8 :checksum, :value => :calculate_checksum
+  end
+
   class LockRequest < Message
     endian :big
 

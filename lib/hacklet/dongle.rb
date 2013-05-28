@@ -1,5 +1,6 @@
 require 'serialport'
 require 'logger'
+require 'timeout'
 
 module Hacklet
   class Dongle
@@ -21,12 +22,33 @@ module Hacklet
         boot
         boot_confirm
         @logger.info("Booting complete")
-        @logger.info("Locking network")
-        lock_network
-        @logger.info("Locking complete")
         yield self
       ensure
         @serial.close
+      end
+    end
+
+    # Public: Listens for new devices on the network.
+    #
+    # This must be executed within an open session.
+    #
+    # Returns nothing.
+    def commission
+      require_session
+
+      begin
+        unlock_network
+        10.times do
+          @logger.info("Listening for devices ...")
+          ready, _, _ = IO.select([@serial], [], [], 1)
+          if ready[0]
+            response = @serial.read_nonblock(64)
+            @logger.debug("RX: #{unpack(response).inspect}")
+          end
+        end
+      rescue Timeout::Error
+      ensure
+        lock_network
       end
     end
 
@@ -83,6 +105,26 @@ module Hacklet
       ScheduleResponse.read(receive(6))
     end
 
+    # Public: Unlocks the network, to add a new device.
+    #
+    # Returns the BootConfirmResponse
+    def unlock_network
+      @logger.info("Unlocking network")
+      transmit(UnlockRequest.new)
+      LockResponse.read(receive(6))
+      @logger.info("Unlocking complete")
+    end
+
+    # Public: Locks the network, prevents adding new devices.
+    #
+    # Returns the BootConfirmResponse
+    def lock_network
+      @logger.info("Locking network")
+      transmit(LockRequest.new)
+      LockResponse.read(receive(6))
+      @logger.info("Locking complete")
+    end
+
   private
     # Private: Initializes the dongle for communication
     #
@@ -100,16 +142,6 @@ module Hacklet
     def boot_confirm
       transmit(BootConfirmRequest.new)
       BootConfirmResponse.read(receive(6))
-    end
-
-    # Private: Locks the network.
-    #
-    # Not sure from what but that's what the logs say.
-    #
-    # Returns the BootConfirmResponse
-    def lock_network
-      transmit(LockRequest.new)
-      LockResponse.read(receive(6))
     end
 
     # Private: Initializes the serial port
