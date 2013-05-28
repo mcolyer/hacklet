@@ -41,7 +41,7 @@ module Hacklet
         10.times do
           @logger.info("Listening for devices ...")
           ready, _, _ = IO.select([@serial], [], [], 1)
-          if ready[0]
+          if ready && ready[0]
             response = @serial.read_nonblock(64)
             @logger.debug("RX: #{unpack(response).inspect}")
           end

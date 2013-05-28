@@ -44,8 +44,8 @@ describe Hacklet::Dongle do
     serial_port.should_receive(:close)
     serial_port.stub!(:closed?).and_return(false)
     subject.should_receive(:open_serial_port).and_return(serial_port)
-    IO.should_receive(:select).and_return([[serial_port], [], []])
-    IO.should_receive(:select).exactly(9).times.and_return([[], [], []])
+    IO.should_receive(:select).and_return([[serial_port], nil, nil])
+    IO.should_receive(:select).exactly(9).times.and_return([nil, nil, nil])
     subject.should_receive(:boot)
     subject.should_receive(:boot_confirm)
 
