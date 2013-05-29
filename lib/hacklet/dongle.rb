@@ -41,14 +41,12 @@ module Hacklet
         Timeout.timeout(30) do
           loop do
             @logger.info("Listening for devices ...")
-            buffer = @serial.read(4)
-            @logger.info("RX(pre): #{unpack(buffer).inspect}")
-            if buffer.bytes.to_a[2] == 0xa0
-              buffer += @serial.read(buffer.bytes.to_a[2]+1)
-            else
-              buffer += @serial.read(buffer.bytes.to_a[3]+1)
+            buffer = receive(4)
+            buffer += receive(buffer.bytes.to_a[3]+1)
+            if buffer.bytes.to_a[1] == 0xa0
+              response = BroadcastResponse.read(buffer)
+              @logger.info("Found #{response.device_id} on #{response.network_id}")
             end
-            @logger.debug("RX(full): #{unpack(buffer).inspect}")
           end
         end
       rescue Timeout::Error

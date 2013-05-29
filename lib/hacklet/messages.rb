@@ -25,8 +25,10 @@ module Hacklet
     # TODO: Determine what's in here
     string :data, :length => 12
 
-    uint64 :network_id
-    uint16 :device_id
+    uint64 :device_id
+
+    # TODO: Determine what's in here
+    uint16 :data2
 
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
@@ -39,6 +41,22 @@ module Hacklet
     uint8  :payload_length, :check_value => lambda { value == 1 }
 
     uint8  :data, :check_value => lambda { value == 0x10 }
+
+    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+  end
+
+  class BroadcastResponse < Message
+    endian :big
+
+    uint8  :header, :check_value => lambda { value == 0x02 }
+    uint16  :command, :check_value => lambda { value == 0xA013 }
+    uint8  :payload_length, :check_value => lambda { value == 11 }
+
+    uint16 :network_id
+    uint64 :device_id
+
+    # TODO: Not sure why this is here.
+    uint8 :data
 
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
@@ -88,8 +106,10 @@ module Hacklet
 
     uint16   :network_id
     uint16   :channel_id
+
     # TODO: Confirm this is actually the device id
-    uint16   :device_id
+    uint16   :data
+
     uint32le :time
     uint16le :sample_count
     uint16le :stored_sample_count

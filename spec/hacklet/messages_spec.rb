@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Message' do
+describe 'Messages' do
   describe 'responses' do
     let(:bad_checksum) { "\x02\x40\x80\x01\x10\x01" }
 
