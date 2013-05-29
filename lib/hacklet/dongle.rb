@@ -39,11 +39,12 @@ module Hacklet
       begin
         unlock_network
         Timeout.timeout(30) do
-	  while true do
+          loop do
             @logger.info("Listening for devices ...")
             buffer = @serial.read(4)
+            @logger.info("RX(pre): #{unpack(buffer).inspect}")
             buffer += @serial.read(buffer.bytes.to_a[3]+1)
-            @logger.debug("RX: #{unpack(buffer).inspect}")
+            @logger.debug("RX(full): #{unpack(buffer).inspect}")
           end
         end
       rescue Timeout::Error
