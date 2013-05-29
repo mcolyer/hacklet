@@ -43,7 +43,11 @@ module Hacklet
             @logger.info("Listening for devices ...")
             buffer = @serial.read(4)
             @logger.info("RX(pre): #{unpack(buffer).inspect}")
-            buffer += @serial.read(buffer.bytes.to_a[3]+1)
+            if buffer.bytes.to_a[2] == 0xa0
+              buffer += @serial.read(buffer.bytes.to_a[2]+1)
+            else
+              buffer += @serial.read(buffer.bytes.to_a[3]+1)
+            end
             @logger.debug("RX(full): #{unpack(buffer).inspect}")
           end
         end
