@@ -1,6 +1,6 @@
 # Hacklet [![Build Status](https://travis-ci.org/mcolyer/hacklet.png)](https://travis-ci.org/mcolyer/hacklet)
 
-A library, written in Ruby, for controlling the [Modlet] (smart) outlet.
+A library, written in Ruby, for controlling the [Modlet][modlet] (smart) outlet.
 
 If you haven't heard of the Modlet before, it's a smart outlet cover
 which allows you to convert any outlet in your house into a smart
@@ -54,5 +54,5 @@ hacklet on -n 0xDEED -s 0
 * [X] Useful utility
 * [ ] Documentation
 
-[Modlet]: http://themodlet.com
+[modlet]: http://themodlet.com
 [amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/
