@@ -89,6 +89,10 @@ module Hacklet
       remaining_bytes = buffer.bytes.to_a[3] + 1
       buffer += receive(remaining_bytes)
       response = SamplesResponse.read(buffer)
+
+      response.converted_samples.each do |time, wattage|
+        @logger.info("#{wattage}w at #{time}")
+      end
       @logger.info("#{response.sample_count} returned, #{response.stored_sample_count} remaining")
 
       response

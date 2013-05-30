@@ -116,6 +116,11 @@ module Hacklet
     array    :samples, :type => [:uint16le], :initial_length => :sample_count
 
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+
+    def converted_samples
+      t = time - 10
+      samples.map { |s| t += 10; [Time.at(t), (s/13.0).round] }
+    end
   end
 
   class ScheduleResponse < Message
