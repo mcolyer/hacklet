@@ -112,7 +112,7 @@ module Hacklet
 
     uint32le :time
     uint8    :sample_count
-    uint16le :stored_sample_count
+    uint24le :stored_sample_count
     array    :samples, :type => [:uint16le], :initial_length => :sample_count
 
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
