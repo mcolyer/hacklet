@@ -9,8 +9,8 @@ you can also determine how much energy it's using with a sampling
 frequency of 10 seconds.
 
 There are alot of other similar products but this is the first one that
-I've see that [costs $50][amazon] and includes control as well as monitoring of
-the independent sockets.
+I've seen that [costs $50][amazon] and includes control as well as
+monitoring of the independent sockets.
 
 ## Why
 
@@ -31,9 +31,9 @@ Right now things are pretty rough and won't work without modifying
 which Modlet and socket you'd like to read or control.
 
 ```
-bundle install
+gem install hacklet
 sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
-bin/hacklet
+hacklet
 ```
 
 ## Status
@@ -43,7 +43,6 @@ bin/hacklet
 * [X] Multiple Modlet Support
 * [X] Commissioning New Devices
 * [X] Useful utility
-* [ ] Set time on New Devices
 * [ ] Documentation
 
 [Modlet]: http://themodlet.com
