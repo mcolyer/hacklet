@@ -153,7 +153,9 @@ module Hacklet
     #
     # Returns a SerialPort object.
     def open_serial_port(port)
-      SerialPort.new(port, 115200, 8, 1, SerialPort::NONE)
+      serial_port = SerialPort.new(port, 115200, 8, 1, SerialPort::NONE)
+      serial_port.flow_control = SerialPort::NONE
+      serial_port
     end
 
     # Private: Transmits the packet to the dongle.
