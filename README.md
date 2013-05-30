@@ -43,6 +43,7 @@ bin/hacklet
 * [X] Multiple Modlet Support
 * [X] Commissioning New Devices
 * [X] Useful utility
+* [ ] Set time on New Devices
 * [ ] Documentation
 
 [Modlet]: http://themodlet.com
