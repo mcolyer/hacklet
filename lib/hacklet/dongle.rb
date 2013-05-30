@@ -4,6 +4,8 @@ require 'timeout'
 
 module Hacklet
   class Dongle
+    attr_reader :logger
+
     # logger - Optionally takes a Logger instance, the default is to log to
     #          STDOUT
     def initialize(logger=Logger.new(STDOUT))

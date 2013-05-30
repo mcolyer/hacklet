@@ -1,4 +1,5 @@
 require 'slop'
+require 'logger'
 
 module Hacklet
   class Command
@@ -7,6 +8,9 @@ module Hacklet
         command 'on', :banner => 'Turn on the specifed socket' do
           on :n, :network=, 'The network id (ex. 0x1234)', :required => true
           on :s, :socket=, 'The socket id (ex. 0)', :required => true
+          on :d, :debug, 'Enables debug logging' do
+            dongle.logger.level = Logger::DEBUG
+          end
 
           run do |opts, args|
             network_id = opts[:network][2..-1].to_i(16)
@@ -23,6 +27,9 @@ module Hacklet
         command 'off', :banner => 'Turn off the specifed socket' do
           on :n, :network=, 'The network id (ex. 0x1234)', :required => true
           on :s, :socket=, 'The socket id (ex. 0)', :required => true
+          on :d, :debug, 'Enables debug logging' do
+            dongle.logger.level = Logger::DEBUG
+          end
 
           run do |opts, args|
             network_id = opts[:network][2..-1].to_i(16)
@@ -39,6 +46,9 @@ module Hacklet
         command 'read', :banner => 'Read all available samples from the specified socket' do
           on :n, :network=, 'The network id (ex. 0x1234)', :required => true
           on :s, :socket=, 'The socket id (ex. 0)', :required => true
+          on :d, :debug, 'Enables debug logging' do
+            dongle.logger.level = Logger::DEBUG
+          end
 
           run do |opts, args|
             network_id = opts[:network][2..-1].to_i(16)
@@ -53,6 +63,10 @@ module Hacklet
         end
 
         command 'commission', :banner => 'Add a new device to the network' do
+          on :d, :debug, 'Enables debug logging' do
+            dongle.logger.level = Logger::DEBUG
+          end
+
           run do |opts, args|
             dongle.open_session do |session|
               session.commission
