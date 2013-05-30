@@ -45,7 +45,7 @@ module Hacklet
             buffer += receive(buffer.bytes.to_a[3]+1)
             if buffer.bytes.to_a[1] == 0xa0
               response = BroadcastResponse.read(buffer)
-              @logger.info("Found #{response.device_id} on #{response.network_id}")
+              @logger.info("Found 0x#{response.device_id.to_s(16)} on 0x#{response.network_id.to_s(16)}")
             end
           end
         end
