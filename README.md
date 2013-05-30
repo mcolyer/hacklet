@@ -3,7 +3,7 @@
 A library, written in Ruby, for controlling the [Modlet] (smart) outlet.
 
 If you haven't heard of the Modlet before, it's a smart outlet cover
-which allows you to convert any outlet into your house into a smart
+which allows you to convert any outlet in your house into a smart
 outlet. This means that you can control whether a plug is on or off and
 you can also determine how much energy it's using with a sampling
 frequency of 10 seconds.
@@ -26,14 +26,23 @@ control and availability of the data.
 
 ## Getting Started
 
-Right now things are pretty rough and won't work without modifying
-`bin/hacklet`. Eventually the `hacklet` script will allow for specifying
-which Modlet and socket you'd like to read or control.
-
-```
+```shell
 gem install hacklet
+
+# Load the USB-to-serial kernel driver, this only works with Linux currently
 sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
-hacklet
+
+# Add the device to the network, keep a copy of the network ids (ie 0xDEED)
+hacklet commission
+
+# Get the samples from the top socket on the device registered as 0xDEED
+hacklet read -n 0xDEED -s 0
+
+# Turn the top socket off
+hacklet off -n 0xDEED -s 0
+
+# And back on again
+hacklet on -n 0xDEED -s 0
 ```
 
 ## Status
