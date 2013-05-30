@@ -5,19 +5,61 @@ $LOAD_PATH.unshift(lib) if File.directory?(lib) && !$LOAD_PATH.include?(lib)
 
 require 'hacklet'
 require 'logger'
+require 'slop'
 
 logger = Logger.new(STDOUT)
-logger.level = Logger::DEBUG
+logger.level = Logger::INFO
 dongle = Hacklet::Dongle.new(logger)
 
-dongle.open_session do |session|
-  #session.lock_network
-  #session.select_network(0xA7B4)
-  #session.request_samples(0xA7B4, 0x0001)
+options = Slop.parse(:help => true) do
+  command 'on', :banner => 'Turn on the specifed socket' do
+    on :n, :network=, 'The network id (ex. 0x1234)', :required => true
+    on :s, :socket=, 'The socket id (ex. 0)', :required => true
 
-  #session.lock_network
-  #session.select_network(0xA7B4)
-  #session.switch(0xA7B4, 0x0000, true)
+    run do |opts, args|
+      dongle.open_session do |session|
+        session.lock_network
+        session.select_network(opts[:network])
+        session.switch(opts[:network], opts[:socket], true)
+      end
+    end
+  end
 
-  session.commission
+  command 'off', :banner => 'Turn off the specifed socket' do
+    on :n, :network=, 'The network id (ex. 0x1234)', :required => true
+    on :s, :socket=, 'The socket id (ex. 0)', :required => true
+
+    run do |opts, args|
+      dongle.open_session do |session|
+        session.lock_network
+        session.select_network(opts[:network])
+        session.switch(opts[:network], opts[:socket], false)
+      end
+    end
+  end
+
+  command 'read', :banner => 'Read all available samples from the specified socket' do
+    on :n, :network=, 'The network id (ex. 0x1234)', :required => true
+    on :s, :socket=, 'The socket id (ex. 0)', :required => true
+
+    run do |opts, args|
+      dongle.open_session do |session|
+        session.lock_network
+        session.select_network(opts[:network])
+        session.request_samples(opts[:network], opts[:socket])
+      end
+    end
+  end
+
+  command 'commission', :banner => 'Add a new device to the network' do
+    run do |opts, args|
+      dongle.open_session do |session|
+        session.commission
+      end
+    end
+  end
+
+  run do
+    puts help
+  end
 end

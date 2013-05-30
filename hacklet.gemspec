@@ -18,8 +18,9 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "serialport"
-  gem.add_dependency "bindata"
+  gem.add_dependency "serialport", "~>1.1.0"
+  gem.add_dependency "bindata", "~>1.5.0"
+  gem.add_dependency "slop", "~>3.4.0"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
 end

@@ -38,12 +38,12 @@ bin/hacklet
 
 ## Status
 
-* Reading Data: Working
-* Controlling Sockets: Working
-* Multiple Modlet Support: Working
-* Commissioning New Devices: Working
-* Useful utility: TODO
-* Documentation: TODO
+* [X] Reading Data
+* [X] Controlling Sockets
+* [X] Multiple Modlet Support
+* [X] Commissioning New Devices
+* [X] Useful utility
+* [ ] Documentation
 
 [Modlet]: http://themodlet.com
 [amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/
