@@ -1,4 +1,7 @@
-0.0.1 / YYYY-MM-DD
+
+0.5.0 / 2013-05-30
 ==================
 
-  * Initial version
+ * Can commission new modlets, read data from them and control them
+   through a simple utility program. This is the minimal required in
+   order to be useful.

@@ -7,7 +7,7 @@ module Bundler
     def release_gem
       with_fixed_editor {
         guard_on_master_branch
-        guard_already_tagged
+        return if already_tagged?
         build_gem
         edit_changelog
         sh "git commit --allow-empty -a -m 'Release #{version_tag}'"
@@ -40,7 +40,7 @@ module Bundler
     end
     def edit_changelog
       unless `which git-changelog`.empty?
-        sh "git-changelog"
+        #sh "git-changelog"
       else
         abort "git-changelog isn't found. Install it with `brew install git-extras`"
       end
