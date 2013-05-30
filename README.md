@@ -5,7 +5,8 @@ A library, written in Ruby, for controlling the [Modlet] (smart) outlet.
 If you haven't heard of the Modlet before, it's a smart outlet cover
 which allows you to convert any outlet into your house into a smart
 outlet. This means that you can control whether a plug is on or off and
-you can also determine how much energy it's using.
+you can also determine how much energy it's using with a sampling
+frequency of 10 seconds.
 
 There are alot of other similar products but this is the first one that
 I've see that [costs $50][amazon] and includes control as well as monitoring of
@@ -15,7 +16,7 @@ the independent sockets.
 
 So why write another client?
 
-Unfortuantely the client software included with the device isn't
+Unfortunately the client software included with the device isn't
 available on all platforms (Linux) and it's pretty heavyweight for what
 it does.
 
@@ -31,6 +32,7 @@ which Modlet and socket you'd like to read or control.
 
 ```
 bundle install
+sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
 bin/hacklet
 ```
 
@@ -38,15 +40,10 @@ bin/hacklet
 
 * Reading Data: Working
 * Controlling Sockets: Working
+* Multiple Modlet Support: Working
+* Commissioning New Devices: Working
 * Useful utility: TODO
-* Multiple Modlet Support: (should be easy but need to get more than one)
-* Network Discovery: TODO
-* Commissioning New Devices: TODO
-
-Currently it only supports working with  a previously configured network. So
-you'll need to setup the Modlets using the bundled software but once
-configured into a network you can use hacklet to monitor their data and
-control them as you choose.
+* Documentation: TODO
 
 [Modlet]: http://themodlet.com
 [amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/
