@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Hacklet by mcolyer</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Hacklet</h1>
+        <p>An Open Source client for the Modlet (smart) outlet</p>
+
+        <p class="view"><a href="https://github.com/mcolyer/hacklet">View the Project on GitHub <small>mcolyer/hacklet</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/mcolyer/hacklet/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/mcolyer/hacklet/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/mcolyer/hacklet">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="hacklet-" class="anchor" href="#hacklet-"><span class="octicon octicon-link"></span></a>Hacklet <a href="https://travis-ci.org/mcolyer/hacklet"><img src="https://travis-ci.org/mcolyer/hacklet.png" alt="Build Status"></a>
+</h1>
+
+<p>A library, written in Ruby, for controlling the <a href="smart">Modlet</a> outlet.</p>
+
+<p>If you haven't heard of the Modlet before, it's a smart outlet cover
+which allows you to convert any outlet into your house into a smart
+outlet. This means that you can control whether a plug is on or off and
+you can also determine how much energy it's using with a sampling
+frequency of 10 seconds.</p>
+
+<p>There are alot of other similar products but this is the first one that
+I've see that <a href="http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/">costs $50</a> and includes control as well as monitoring of
+the independent sockets.</p>
+
+<h2>
+<a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why</h2>
+
+<p>So why write another client?</p>
+
+<p>Unfortunately the client software included with the device isn't
+available on all platforms (Linux) and it's pretty heavyweight for what
+it does.</p>
+
+<p>The goal of this project is provide all the same functionality of the
+bundled client but do it in a lightweight manner, to provide total
+control and availability of the data.</p>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>Right now things are pretty rough and won't work without modifying
+<code>bin/hacklet</code>. Eventually the <code>hacklet</code> script will allow for specifying
+which Modlet and socket you'd like to read or control.</p>
+
+<pre><code>bundle install
+sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
+bin/hacklet
+</code></pre>
+
+<h2>
+<a name="status" class="anchor" href="#status"><span class="octicon octicon-link"></span></a>Status</h2>
+
+<ul>
+<li>[X] Reading Data</li>
+<li>[X] Controlling Sockets</li>
+<li>[X] Multiple Modlet Support</li>
+<li>[X] Commissioning New Devices</li>
+<li>[X] Useful utility</li>
+<li>[ ] Set time on New Devices</li>
+<li>[ ] Documentation</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/mcolyer">mcolyer</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
