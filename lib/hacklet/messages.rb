@@ -111,7 +111,7 @@ module Hacklet
     uint16   :data
 
     uint32le :time
-    uint16le :sample_count
+    uint8    :sample_count
     uint16le :stored_sample_count
     array    :samples, :type => [:uint16le], :initial_length => :sample_count
 
