@@ -45,7 +45,7 @@ module Hacklet
             buffer += receive(buffer.bytes.to_a[3]+1)
             if buffer.bytes.to_a[1] == 0xa0
               response = BroadcastResponse.read(buffer)
-              @logger.info("Found 0x%x on 0x%x" % [response.device_id, response.network_id])
+              @logger.info("Found device 0x%x on network 0x%x" % [response.device_id, response.network_id])
             end
           end
         end
@@ -80,12 +80,16 @@ module Hacklet
     def request_samples(network_id, channel_id)
       require_session
 
+      @logger.info("Requesting samples")
       transmit(SamplesRequest.new(:network_id => network_id, :channel_id => channel_id))
       AckResponse.read(receive(6))
       buffer = receive(4)
       remaining_bytes = buffer.bytes.to_a[3] + 1
       buffer += receive(remaining_bytes)
-      SamplesResponse.read(buffer)
+      response = SamplesResponse.read(buffer)
+      @logger.info("#{response.sample_count} returned, #{response.stored_sample_count} remaining")
+
+      response
     end
 
     # Public: Used to controls whether a socket is on or off.
@@ -101,8 +105,10 @@ module Hacklet
       request = ScheduleRequest.new(:network_id => network_id, :channel_id => channel_id)
       if state
         request.always_on!
+        @logger.info("Turning on channel #{channel_id} on network 0x#{network_id.to_s(16)}")
       else
         request.always_off!
+        @logger.info("Turning off channel #{channel_id} on network 0x#{network_id.to_s(16)}")
       end
       transmit(request)
       ScheduleResponse.read(receive(6))
