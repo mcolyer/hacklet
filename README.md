@@ -10,7 +10,7 @@ frequency of 10 seconds.
 
 There are alot of other similar products but this is the first one that
 I've seen that [costs $50][amazon] and includes control as well as
-monitoring of the independent sockets.
+monitoring of the both sockets independently.
 
 ## Why
 
@@ -45,14 +45,27 @@ hacklet off -n 0xDEED -s 0
 hacklet on -n 0xDEED -s 0
 ```
 
-## Status
+## Contributing
 
-* [X] Reading Data
-* [X] Controlling Sockets
-* [X] Multiple Modlet Support
-* [X] Commissioning New Devices
-* [X] Useful utility
-* [ ] Documentation
+All contributions are welcome (bug reports, bug fixes, documentation or
+new features)!  If you're looking for something to do check the [issue]
+list and see if there's something already there. If you've got a new
+idea, feel free to create an issue for discussion.
+
+To get a general understanding of how things work, checkout the
+[developer wiki]
+
+### Getting Started
+
+* Checkout the repository
+* Install dependencies `bundle install`
+* Create a feature branch `git checkout -b short-name`
+* Run tests `bundle exec rake`
+* Write your feature (and tests)
+* Run tests `bundle exec rake`
+* Create a pull request
 
 [modlet]: http://themodlet.com
 [amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/
+[issue]: https://github.com/mcolyer/hacklet/issues
+[developer wiki]: https://github.com/mcolyer/hacklet/wiki
