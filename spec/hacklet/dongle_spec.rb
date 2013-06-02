@@ -48,11 +48,15 @@ describe Hacklet::Dongle do
     serial_port.should_receive(:read).and_return([0x02, 0xa0, 0x13, 0x0b].pack('c'*4))
     serial_port.should_receive(:read).and_return([0x66, 0xad, 0xcc, 0x1f, 0x10, 0x00,
       0x00, 0x58, 0x4f, 0x80, 0x8e, 0xa9].pack('c'*12))
-    serial_port.should_receive(:read).and_raise(Timeout::Error)
 
     # Lock Network
     serial_port.should_receive(:write).with([0x02, 0xA2, 0x36, 0x04, 0xFC, 0xFF, 0x00, 0x01, 0x92].pack('c'*9))
     serial_port.should_receive(:read).and_return([0x02, 0xA0, 0xF9, 0x01, 0x00, 0x58].pack('c'*6))
+
+    # Update Time
+    serial_port.should_receive(:write).and_return([0x02, 0x40, 0x22, 0x06, 0x66, 0xAD, 0xdb, 0xb4, 0xa8, 0x51, 0x0b].pack('c'*11))
+    serial_port.should_receive(:read).and_return([0x02, 0x40, 0x22, 0x01, 0x00, 0x63].pack('c'*6))
+    serial_port.should_receive(:read).and_return([0x02, 0x40, 0xA2, 0x03, 0x66, 0xAD, 0x00, 0x2a].pack('c'*8))
 
     serial_port.should_receive(:close)
     serial_port.stub!(:closed?).and_return(false)
@@ -61,7 +65,9 @@ describe Hacklet::Dongle do
     subject.should_receive(:boot_confirm)
 
     subject.open_session do |session|
-      session.commission
+      Timecop.freeze(Time.at(0x51a8b4db)) do
+        session.commission
+      end
     end
   end
 

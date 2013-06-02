@@ -38,16 +38,18 @@ module Hacklet
     def commission
       require_session
 
+      response = nil
       begin
         unlock_network
         Timeout.timeout(30) do
+          @logger.info("Listening for devices ...")
           loop do
-            @logger.info("Listening for devices ...")
             buffer = receive(4)
             buffer += receive(buffer.bytes.to_a[3]+1)
             if buffer.bytes.to_a[1] == 0xa0
               response = BroadcastResponse.read(buffer)
               @logger.info("Found device 0x%x on network 0x%x" % [response.device_id, response.network_id])
+              break
             end
           end
         end
@@ -55,6 +57,8 @@ module Hacklet
       ensure
         lock_network
       end
+
+      update_time(response.network_id) if response
     end
 
     # Public: Selects the network.
@@ -157,6 +161,22 @@ module Hacklet
     def boot_confirm
       transmit(BootConfirmRequest.new)
       BootConfirmResponse.read(receive(6))
+    end
+
+    # Private: Updates the time of a device.
+    #
+    # This must be executed within an open session. I'm guessing it selects the
+    # network.
+    #
+    # network_id - 2 byte identified for the network.
+    #
+    # Returns nothing.
+    def update_time(network_id)
+      require_session
+
+      transmit(UpdateTimeRequest.new(:network_id => network_id))
+      UpdateTimeAckResponse.read(receive(6))
+      UpdateTimeResponse.read(receive(8))
     end
 
     # Private: Initializes the serial port
