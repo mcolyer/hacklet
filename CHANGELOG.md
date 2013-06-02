@@ -1,3 +1,7 @@
+0.5.1 / 2013-06-02
+==================
+
+ * Bugfix: Properly sets the time on the device after commissioning.
 
 0.5.0 / 2013-05-30
 ==================
