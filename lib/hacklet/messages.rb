@@ -49,16 +49,16 @@ module Hacklet
     endian :big
 
     uint8  :header, :check_value => lambda { value == 0x02 }
-    uint16  :command, :check_value => lambda { value == 0xA013 }
+    uint16 :command, :check_value => lambda { value == 0xA013 }
     uint8  :payload_length, :check_value => lambda { value == 11 }
 
     uint16 :network_id
     uint64 :device_id
 
     # TODO: Not sure why this is here.
-    uint8 :data
+    uint8  :data
 
-    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
   class LockResponse < Message
@@ -68,9 +68,9 @@ module Hacklet
     uint16 :command, :check_value => lambda { value == 0xA0F9 }
     uint8  :payload_length, :check_value => lambda { value == 1 }
 
-    uint8be :data, :check_value => lambda { value == 0x00 }
+    uint8 :data, :check_value => lambda { value == 0x00 }
 
-    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
   class UpdateTimeAckResponse < Message
@@ -105,9 +105,9 @@ module Hacklet
     uint16 :command, :check_value => lambda { value == 0x4003 }
     uint8  :payload_length, :check_value => lambda { value == 1 }
 
-    uint8be :data, :check_value => lambda { value == 0x00 }
+    uint8  :data, :check_value => lambda { value == 0x00 }
 
-    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
   class AckResponse < Message
@@ -117,17 +117,17 @@ module Hacklet
     uint16 :command, :check_value => lambda { value == 0x4024 }
     uint8  :payload_length, :check_value => lambda { value == 1 }
 
-    uint8be :data, :check_value => lambda { value == 0x00 }
+    uint8  :data, :check_value => lambda { value == 0x00 }
 
-    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
   class SamplesResponse < Message
     endian :big
 
-    uint8  :header, :check_value => lambda { value == 0x02 }
-    uint16 :command, :check_value => lambda { value == 0x40A4 }
-    uint8  :payload_length
+    uint8    :header, :check_value => lambda { value == 0x02 }
+    uint16   :command, :check_value => lambda { value == 0x40A4 }
+    uint8    :payload_length
 
     uint16   :network_id
     uint16   :channel_id
@@ -155,9 +155,9 @@ module Hacklet
     uint16 :command, :check_value => lambda { value == 0x4023 }
     uint8  :payload_length, :check_value => lambda { value == 1 }
 
-    uint8be :data, :check_value => lambda { value == 0x00 }
+    uint8  :data, :check_value => lambda { value == 0x00 }
 
-    uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
   class BootRequest < Message
@@ -167,7 +167,7 @@ module Hacklet
     uint16 :command, :initial_value => 0x4004
     uint8  :payload_length
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
   end
 
   class BootConfirmRequest < Message
@@ -177,7 +177,7 @@ module Hacklet
     uint16 :command, :initial_value => 0x4000
     uint8  :payload_length
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
   end
 
   class UnlockRequest < Message
@@ -190,7 +190,7 @@ module Hacklet
     # TODO: What is this?
     uint32 :data, :initial_value => 0xFCFF9001
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
   end
 
   class LockRequest < Message
@@ -203,10 +203,10 @@ module Hacklet
     # TODO: What is this?
     uint32 :data, :initial_value => 0xFCFF0001
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
   end
 
-  class TimeUpdateRequest < Message
+  class UpdateTimeRequest < Message
     endian :big
 
     uint8    :header, :initial_value => 0x02
@@ -230,7 +230,7 @@ module Hacklet
     # TODO: What is this?
     uint16 :data, :initial_value => 0x0500
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
   end
 
   class SamplesRequest < Message
@@ -245,7 +245,7 @@ module Hacklet
     # TODO: What is this?
     uint16 :data, :initial_value => 0x0A00
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
   end
 
   class ScheduleRequest < Message
@@ -259,7 +259,7 @@ module Hacklet
     uint8  :channel_id
     array  :schedule, :type => [:uint8], :initial_length => 56
 
-    uint8 :checksum, :value => :calculate_checksum
+    uint8  :checksum, :value => :calculate_checksum
 
     def always_off!
       bitmap = [0x7f]*56
