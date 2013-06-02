@@ -176,7 +176,7 @@ module Hacklet
 
       transmit(UpdateTimeRequest.new(:network_id => network_id))
       UpdateTimeAckResponse.read(receive(6))
-      UpdateTimeResponse.read(receive(6))
+      UpdateTimeResponse.read(receive(8))
     end
 
     # Private: Initializes the serial port
