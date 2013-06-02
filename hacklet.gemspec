@@ -23,4 +23,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency "slop", "~>3.4.0"
   gem.add_development_dependency "rake"
   gem.add_development_dependency "rspec"
+  gem.add_development_dependency "timecop"
 end
