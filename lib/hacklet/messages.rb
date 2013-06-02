@@ -73,6 +73,31 @@ module Hacklet
     uint8 :checksum, :check_value => lambda { calculate_checksum == checksum }
   end
 
+  class UpdateTimeAckResponse < Message
+    endian :big
+
+    uint8  :header, :check_value => lambda { value == 0x02 }
+    uint16 :command, :check_value => lambda { value == 0x4022 }
+    uint8  :payload_length, :check_value => lambda { value == 1 }
+
+    uint8  :data, :check_value => lambda { value == 0x00 }
+
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
+  end
+
+  class UpdateTimeResponse < Message
+    endian :big
+
+    uint8  :header, :check_value => lambda { value == 0x02 }
+    uint16 :command, :check_value => lambda { value == 0x40a2 }
+    uint8  :payload_length, :check_value => lambda { value == 3 }
+
+    uint16 :network_id
+    uint8  :data, :check_value => lambda { value == 0x00 }
+
+    uint8  :checksum, :check_value => lambda { calculate_checksum == checksum }
+  end
+
   class HandshakeResponse < Message
     endian :big
 
@@ -179,6 +204,19 @@ module Hacklet
     uint32 :data, :initial_value => 0xFCFF0001
 
     uint8 :checksum, :value => :calculate_checksum
+  end
+
+  class TimeUpdateRequest < Message
+    endian :big
+
+    uint8    :header, :initial_value => 0x02
+    uint16   :command, :initial_value => 0x4022
+    uint8    :payload_length, :initial_value => 6
+
+    uint16   :network_id
+    uint32le :time, :initial_value => lambda { Time.now.to_i }
+
+    uint8    :checksum, :value => :calculate_checksum
   end
 
   class HandshakeRequest < Message
