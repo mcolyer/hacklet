@@ -66,6 +66,6 @@ To get a general understanding of how things work, checkout the
 * Create a pull request
 
 [modlet]: http://themodlet.com
-[amazon]: http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/
+[amazon]: http://www.amazon.com/gp/product/B00AAT43OA/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00AAT43OA&linkCode=as2&tag=matcol-20
 [issue]: https://github.com/mcolyer/hacklet/issues
 [developer wiki]: https://github.com/mcolyer/hacklet/wiki
