@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Hacklet by mcolyer</title>
+    <title>Hacklet - Control your Modlet Smart Outlet</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -13,81 +13,101 @@
     <![endif]-->
   </head>
   <body>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-41585090-1', 'mcolyer.github.io');
+      ga('send', 'pageview');
+    </script>
+
     <div class="wrapper">
-      <header>
-        <h1>Hacklet</h1>
-        <p>An Open Source client for the Modlet (smart) outlet</p>
-
-        <p class="view"><a href="https://github.com/mcolyer/hacklet">View the Project on GitHub <small>mcolyer/hacklet</small></a></p>
-
-
-        <ul>
-          <li><a href="https://github.com/mcolyer/hacklet/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/mcolyer/hacklet/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/mcolyer/hacklet">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
+      <a href="https://github.com/mcolyer/hacklet"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
       <section>
+        <iframe width="640" height="360" src="http://www.youtube-nocookie.com/embed/rTn9QfW8NS8" frameborder="0" allowfullscreen></iframe>
         <h1>
 <a name="hacklet-" class="anchor" href="#hacklet-"><span class="octicon octicon-link"></span></a>Hacklet <a href="https://travis-ci.org/mcolyer/hacklet"><img src="https://travis-ci.org/mcolyer/hacklet.png" alt="Build Status"></a>
 </h1>
 
-<p>A library, written in Ruby, for controlling the <a href="smart">Modlet</a> outlet.</p>
+<p>A library, written in Ruby, for controlling the <a href="http://www.themodlet.com">Modlet</a> outlet.</p>
 
 <p>If you haven't heard of the Modlet before, it's a smart outlet cover
 which allows you to convert any outlet into your house into a smart
-outlet. This means that you can control whether a plug is on or off and
-you can also determine how much energy it's using with a sampling
-frequency of 10 seconds.</p>
+outlet. This means that you can determine how much energy it's using and
+control whether it's on or off.</p>
 
-<p>There are alot of other similar products but this is the first one that
-I've see that <a href="http://www.amazon.com/ThinkEco-TE1010-Modlet-Starter-White/dp/B00AAT43OA/">costs $50</a> and includes control as well as monitoring of
-the independent sockets.</p>
+<p>If you're interested in controlling your Modlets remotely, you can use them
+with <a href="http://ifttt.com">IFTTT</a> using <a
+href="https://github.com/mcolyer/hacklet-remote/">hacklet-remote</a>. Once
+setup you can control your applicances via SMS, email or even Google Calendar.
+It works just like the <a href="http://www.belkin.com/us/wemo">WeMo</a> switch
+except you maintain control (and don't have to worry if WeMo's servers
+shutdown).</p>
+
+<h2>
+<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
+
+<p>
+You'll need:
+</p>
+
+<ul>
+<li>A computer running Linux (I use a <a href="http://www.amazon.com/gp/product/B009SQQF9C/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B009SQQF9C&linkCode=as2&tag=matcol01-20">Raspberry Pi</a>) with a spare USB port ~$45</li>
+<li>A <a href="http://www.amazon.com/gp/product/B00AAT43OA/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00AAT43OA&linkCode=as2&tag=matcol-20">Modlet Starter Kit</a> ~$50</li>
+</ul>
+
+<p>
+Once you've got those materials you should be set. For a full walkthrough, watch the <a
+href="http://youtu.be/rTn9QfW8NS8">demo video</a>. For the impatient read below.
+</p>
+
+<pre><code>gem install hacklet
+
+# Insert the dongle into the computer
+
+# Load the USB-to-serial kernel driver, this only works with Linux currently
+sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
+
+# Add the device to the network, keep a copy of the network ids (ie 0xDEED)
+hacklet commission
+
+# Plug your modlet into the wall
+
+# Turn the top socket off
+hacklet off -n 0xDEED -s 0
+
+# And back on again
+hacklet on -n 0xDEED -s 0
+
+# Get the samples from the top socket on the device registered as 0xDEED
+hacklet read -n 0xDEED -s 0
+</code></pre>
 
 <h2>
 <a name="why" class="anchor" href="#why"><span class="octicon octicon-link"></span></a>Why</h2>
 
 <p>So why write another client?</p>
 
-<p>Unfortunately the client software included with the device isn't
+<p>I really liked the idea of the WeMo outlet, but I felt like it should really
+have included two sockets. I also disliked the fact that you need to use their
+servers to control it. Then I found the Modlet.  </p>
+
+<p>Unfortunately the client software included with the Modlet isn't
 available on all platforms (Linux) and it's pretty heavyweight for what
 it does.</p>
 
 <p>The goal of this project is provide all the same functionality of the
-bundled client but do it in a lightweight manner, to provide total
-control and availability of the data.</p>
+bundled client but do it in a lightweight manner. In short, create a client
+that gives total control and availability of the data. <a
+href="http://github.com/mcolyer/hacket">Join us</a> in our quest.</p>
 
-<h2>
-<a name="getting-started" class="anchor" href="#getting-started"><span class="octicon octicon-link"></span></a>Getting Started</h2>
-
-<p>Right now things are pretty rough and won't work without modifying
-<code>bin/hacklet</code>. Eventually the <code>hacklet</code> script will allow for specifying
-which Modlet and socket you'd like to read or control.</p>
-
-<pre><code>bundle install
-sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
-bin/hacklet
-</code></pre>
-
-<h2>
-<a name="status" class="anchor" href="#status"><span class="octicon octicon-link"></span></a>Status</h2>
-
-<ul>
-<li>[X] Reading Data</li>
-<li>[X] Controlling Sockets</li>
-<li>[X] Multiple Modlet Support</li>
-<li>[X] Commissioning New Devices</li>
-<li>[X] Useful utility</li>
-<li>[ ] Set time on New Devices</li>
-<li>[ ] Documentation</li>
-</ul>
+<hr>
+<p style="text-align:center">A hack by <a href="http://matt.colyer.name">Matt Colyer</a>
       </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/mcolyer">mcolyer</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
