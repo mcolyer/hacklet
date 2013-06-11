@@ -2,15 +2,18 @@
 
 A library, written in Ruby, for controlling the [Modlet][modlet] (smart) outlet.
 
-If you haven't heard of the Modlet before, it's a smart outlet cover
-which allows you to convert any outlet in your house into a smart
-outlet. This means that you can control whether a plug is on or off and
-you can also determine how much energy it's using with a sampling
-frequency of 10 seconds.
+If you haven't heard of the Modlet before, it's an outlet cover which
+allows you to convert any standard US outlet into a smart outlet. This
+means that you can control whether each socket is on or off as well as
+determine how much energy it's using with a sampling frequency of 10
+seconds.
 
 There are alot of other similar products but this is the first one that
 I've seen that [costs $50][amazon] and includes control as well as
-monitoring of the both sockets independently.
+monitoring of both sockets independently.
+
+Checkout the companion project [hacklet-remote] if you're interested in
+controlling your modlet with [IFTTT].
 
 ## Why
 
@@ -21,8 +24,8 @@ available on all platforms (Linux) and it's pretty heavyweight for what
 it does.
 
 The goal of this project is provide all the same functionality of the
-bundled client but do it in a lightweight manner, to provide total
-control and availability of the data.
+bundled client but in a lightweight manner without dependencies on
+external services.
 
 ## Getting Started
 
@@ -48,18 +51,24 @@ hacklet on -n 0xDEED -s 0
 ## Contributing
 
 All contributions are welcome (bug reports, bug fixes, documentation or
-new features)!  If you're looking for something to do check the [issue]
-list and see if there's something already there. If you've got a new
-idea, feel free to create an issue for discussion.
+new features)! All discussion happens using [issues] so if you are
+interested in contributing:
 
-To get a general understanding of how things work, checkout the
-[developer wiki]
+* Search to make sure an issue doesn't already exist.
+* If it doesn't, create a new issue and describe your proposal.
 
-### Getting Started
+If you're interested in following the status of the project, simply
+"watch" the repository on Github and you'll receive notices about all of
+the new issues.
 
-* Checkout the repository
+If your curious about how the hardware works or the specifics of the
+protocol checkout out the [developer wiki].
+
+### Contribution Workflow
+
+* Fork the repository
 * Install dependencies `bundle install`
-* Create a feature branch `git checkout -b short-name`
+* Create a feature branch `git checkout -b short-descriptive-name`
 * Run tests `bundle exec rake`
 * Write your feature (and tests)
 * Run tests `bundle exec rake`
@@ -67,5 +76,7 @@ To get a general understanding of how things work, checkout the
 
 [modlet]: http://themodlet.com
 [amazon]: http://www.amazon.com/gp/product/B00AAT43OA/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00AAT43OA&linkCode=as2&tag=matcol-20
-[issue]: https://github.com/mcolyer/hacklet/issues
+[issues]: https://github.com/mcolyer/hacklet/issues
 [developer wiki]: https://github.com/mcolyer/hacklet/wiki
+[hacklet-remote]: https://github.com/mcolyer/hacklet-remote/
+[IFTTT]: http://ifttt.com
