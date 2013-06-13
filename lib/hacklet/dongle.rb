@@ -1,4 +1,3 @@
-require 'serialport'
 require 'logger'
 require 'timeout'
 
@@ -6,28 +5,28 @@ module Hacklet
   class Dongle
     attr_reader :logger
 
-    # logger - Optionally takes a Logger instance, the default is to log to
-    #          STDOUT
-    def initialize(logger=Logger.new(STDOUT))
-      @logger = logger
-    end
-
-    # Public: Initializes a session so the client can request data.
+    # Public: Initializes a dongle instance and yields it.
     #
-    # port - Optional string for configuring the serial port device.
+    # logger - The Logger instance to log to, defaults to STDOUT.
     #
     # Returns nothing.
-    def open_session(port='/dev/ttyUSB0')
-      @serial = open_serial_port(port)
+    def self.open(logger=Logger.new(STDOUT))
+      serial = SerialConnection.new(logger)
+      dongle = Dongle.new(serial, logger)
       begin
-        @logger.info("Booting")
-        boot
-        boot_confirm
-        @logger.info("Booting complete")
-        yield self
+        dongle.send(:boot)
+        dongle.send(:boot_confirm)
+        yield dongle
       ensure
-        @serial.close
+        serial.close
       end
+    end
+
+    # serial - Serial connection to use with the dongle.
+    # logger - The Logger instance to log to.
+    def initialize(serial, logger)
+      @serial = serial
+      @logger = logger
     end
 
     # Public: Listens for new devices on the network.
@@ -36,16 +35,14 @@ module Hacklet
     #
     # Returns nothing.
     def commission
-      require_session
-
       response = nil
       begin
         unlock_network
         Timeout.timeout(30) do
           @logger.info("Listening for devices ...")
           loop do
-            buffer = receive(4)
-            buffer += receive(buffer.bytes.to_a[3]+1)
+            buffer = @serial.receive(4)
+            buffer += @serial.receive(buffer.bytes.to_a[3]+1)
             if buffer.bytes.to_a[1] == 0xa0
               response = BroadcastResponse.read(buffer)
               @logger.info("Found device 0x%x on network 0x%x" % [response.device_id, response.network_id])
@@ -70,10 +67,8 @@ module Hacklet
     #
     # Returns nothing.
     def select_network(network_id)
-      require_session
-
-      transmit(HandshakeRequest.new(:network_id => network_id))
-      HandshakeResponse.read(receive(6))
+      @serial.transmit(HandshakeRequest.new(:network_id => network_id))
+      HandshakeResponse.read(@serial.receive(6))
     end
 
     # Public: Request stored samples.
@@ -84,14 +79,12 @@ module Hacklet
     # TODO: This needs to return a more usable set of data.
     # Returns the SamplesResponse.
     def request_samples(network_id, channel_id)
-      require_session
-
       @logger.info("Requesting samples")
-      transmit(SamplesRequest.new(:network_id => network_id, :channel_id => channel_id))
-      AckResponse.read(receive(6))
-      buffer = receive(4)
+      @serial.transmit(SamplesRequest.new(:network_id => network_id, :channel_id => channel_id))
+      AckResponse.read(@serial.receive(6))
+      buffer = @serial.receive(4)
       remaining_bytes = buffer.bytes.to_a[3] + 1
-      buffer += receive(remaining_bytes)
+      buffer += @serial.receive(remaining_bytes)
       response = SamplesResponse.read(buffer)
 
       response.converted_samples.each do |time, wattage|
@@ -110,8 +103,6 @@ module Hacklet
     #
     # Returns the SwitchResponse.
     def switch(network_id, channel_id, state)
-      require_session
-
       request = ScheduleRequest.new(:network_id => network_id, :channel_id => channel_id)
       if state
         request.always_on!
@@ -120,8 +111,8 @@ module Hacklet
         request.always_off!
         @logger.info("Turning off channel #{channel_id} on network 0x#{network_id.to_s(16)}")
       end
-      transmit(request)
-      ScheduleResponse.read(receive(6))
+      @serial.transmit(request)
+      ScheduleResponse.read(@serial.receive(6))
     end
 
     # Public: Unlocks the network, to add a new device.
@@ -129,8 +120,8 @@ module Hacklet
     # Returns the BootConfirmResponse
     def unlock_network
       @logger.info("Unlocking network")
-      transmit(UnlockRequest.new)
-      LockResponse.read(receive(6))
+      @serial.transmit(UnlockRequest.new)
+      LockResponse.read(@serial.receive(6))
       @logger.info("Unlocking complete")
     end
 
@@ -139,8 +130,8 @@ module Hacklet
     # Returns the BootConfirmResponse
     def lock_network
       @logger.info("Locking network")
-      transmit(LockRequest.new)
-      LockResponse.read(receive(6))
+      @serial.transmit(LockRequest.new)
+      LockResponse.read(@serial.receive(6))
       @logger.info("Locking complete")
     end
 
@@ -149,8 +140,9 @@ module Hacklet
     #
     # Returns the BootResponse
     def boot
-      transmit(BootRequest.new)
-      BootResponse.read(receive(27))
+      @logger.info("Booting")
+      @serial.transmit(BootRequest.new)
+      BootResponse.read(@serial.receive(27))
     end
 
     # Private: Confirms that booting was successful?
@@ -159,8 +151,9 @@ module Hacklet
     #
     # Returns the BootConfirmResponse
     def boot_confirm
-      transmit(BootConfirmRequest.new)
-      BootConfirmResponse.read(receive(6))
+      @serial.transmit(BootConfirmRequest.new)
+      BootConfirmResponse.read(@serial.receive(6))
+      @logger.info("Booting complete")
     end
 
     # Private: Updates the time of a device.
@@ -172,66 +165,9 @@ module Hacklet
     #
     # Returns nothing.
     def update_time(network_id)
-      require_session
-
-      transmit(UpdateTimeRequest.new(:network_id => network_id))
-      UpdateTimeAckResponse.read(receive(6))
-      UpdateTimeResponse.read(receive(8))
-    end
-
-    # Private: Initializes the serial port
-    #
-    # port - the String to the device to open as a serial port.
-    #
-    # Returns a SerialPort object.
-    def open_serial_port(port)
-      serial_port = SerialPort.new(port, 115200, 8, 1, SerialPort::NONE)
-      serial_port.flow_control = SerialPort::NONE
-      serial_port
-    end
-
-    # Private: Transmits the packet to the dongle.
-    #
-    # command - The binary string to send.
-    #
-    # Returns the number of bytes written.
-    def transmit(command)
-      @logger.debug("TX: #{unpack(command.to_binary_s).inspect}")
-      @serial.write(command.to_binary_s) if @serial
-    end
-
-    # Private: Waits and receives the specified number of packets from the
-    # dongle.
-    #
-    # bytes - The number of bytes to read.
-    #
-    # Returns a binary string containing the response.
-    def receive(bytes)
-      if @serial
-        response = @serial.read(bytes)
-      else
-        response = "\x0\x0\x0\x0"
-      end
-      @logger.debug("RX: #{unpack(response).inspect}")
-
-      response
-    end
-
-    # Private: Prints a binary string a concise hexidecimal form for debugging
-    #
-    # message - The message to parse.
-    #
-    # Returns a string of hexidecimal representing equivalent to the message.
-    def unpack(message)
-      message.unpack('H2'*message.size)
-    end
-
-    # Private: A helper to ensure that the serial port is active.
-    #
-    # Returns nothing.
-    # Raises RuntimeError if the serial port is not active.
-    def require_session
-      raise RuntimeError.new("Must be executed within an open session") unless @serial && !@serial.closed?
+      @serial.transmit(UpdateTimeRequest.new(:network_id => network_id))
+      UpdateTimeAckResponse.read(@serial.receive(6))
+      UpdateTimeResponse.read(@serial.receive(8))
     end
   end
 end

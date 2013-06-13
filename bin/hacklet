@@ -8,6 +8,7 @@ require 'logger'
 
 logger = Logger.new(STDOUT)
 logger.level = Logger::INFO
-dongle = Hacklet::Dongle.new(logger)
 
-Hacklet::Command.run(dongle, ARGV)
+Hacklet::Dongle.open(logger) do |dongle|
+  Hacklet::Command.run(dongle, ARGV)
+end

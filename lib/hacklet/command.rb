@@ -16,11 +16,9 @@ module Hacklet
             network_id = opts[:network][2..-1].to_i(16)
             socket_id = opts[:socket].to_i
 
-            dongle.open_session do |session|
-              session.lock_network
-              session.select_network(network_id)
-              session.switch(network_id, socket_id, true)
-            end
+            dongle.lock_network
+            dongle.select_network(network_id)
+            dongle.switch(network_id, socket_id, true)
           end
         end
 
@@ -35,11 +33,9 @@ module Hacklet
             network_id = opts[:network][2..-1].to_i(16)
             socket_id = opts[:socket].to_i
 
-            dongle.open_session do |session|
-              session.lock_network
-              session.select_network(network_id)
-              session.switch(network_id, socket_id, false)
-            end
+            dongle.lock_network
+            dongle.select_network(network_id)
+            dongle.switch(network_id, socket_id, false)
           end
         end
 
@@ -54,11 +50,9 @@ module Hacklet
             network_id = opts[:network][2..-1].to_i(16)
             socket_id = opts[:socket].to_i
 
-            dongle.open_session do |session|
-              session.lock_network
-              session.select_network(network_id)
-              session.request_samples(network_id, socket_id)
-            end
+            dongle.lock_network
+            dongle.select_network(network_id)
+            dongle.request_samples(network_id, socket_id)
           end
         end
 
@@ -68,9 +62,7 @@ module Hacklet
           end
 
           run do |opts, args|
-            dongle.open_session do |session|
-              session.commission
-            end
+            dongle.commission
           end
         end
 
