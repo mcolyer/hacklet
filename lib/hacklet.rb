@@ -1,4 +1,5 @@
 require "hacklet/version"
 require "hacklet/messages"
+require "hacklet/serial_connection"
 require "hacklet/dongle"
 require "hacklet/command"
