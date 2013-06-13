@@ -27,14 +27,47 @@ The goal of this project is provide all the same functionality of the
 bundled client but in a lightweight manner without dependencies on
 external services.
 
+## Installation
+
+### Mac
+
+```shell
+brew install libftdi
+gem install hacklet
+```
+
+### Linux (Ubuntu/Debian)
+
+```shell
+apt-get install libftdi1
+gem install hacklet
+```
+
+**Note**: Depending on device permissions, it may be necessary to run the
+hacklet commands as root. However the preferred solution is to add the
+user running hacklet to the appropriate device groups to avoid running
+hacklet as root.
+
+
+### Windows
+
+**Note**: These directions haven't been confirmed. If you can confirm
+them or improve them, please create an [issue] or send a pull request.
+
+1. Install [7zip] in order to extract Zadiag.
+1. Download Zadig for [XP][zadiag-xp] or [later][zadiag-later].
+1. Extract Zadig and run it.
+1. Click `Options` -> `List all Devices` to populate the device list.
+1. Open the device dropdown and look for the "Thinkeco" device and select it.
+1. Select the libusbK driver and press the `Replace Driver` button.
+1. Download and unzip [libftdi][libftdi-win]
+1. Run `gem install hacklet`
+
+If something isn't clear here, take a look at [libFTDI under Windows][libftdi-win-post] as this was summarized from there.
+
 ## Getting Started
 
 ```shell
-gem install hacklet
-
-# Load the USB-to-serial kernel driver, this only works with Linux currently
-sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
-
 # Add the device to the network, keep a copy of the network ids (ie 0xDEED)
 hacklet commission
 
@@ -80,3 +113,8 @@ protocol checkout out the [developer wiki].
 [developer wiki]: https://github.com/mcolyer/hacklet/wiki
 [hacklet-remote]: https://github.com/mcolyer/hacklet-remote/
 [IFTTT]: http://ifttt.com
+[7zip]: http://www.7-zip.org/
+[libftdi-win]: http://code.google.com/p/picusb/downloads/detail?name=libftdi1-1.0_devkit_mingw32_17Feb2013.zip
+[zadiag-xp]: http://sourceforge.net/projects/libwdi/files/zadig/zadig_xp_v2.0.1.160.7z/download
+[zadiag-later]: http://sourceforge.net/projects/libwdi/files/zadig/zadig_v2.0.1.160.7z/download
+[libftdi-win-post]: http://embedded-funk.blogspot.com/2013/03/libftdi-under-windows.html
