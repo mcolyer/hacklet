@@ -19,10 +19,10 @@ describe Hacklet::SerialConnection do
     it 'is successful' do
       serial_port = mock('SerialPort')
       serial_port.should_receive(:flow_control=)
-      serial_port.should_receive(:write).with("\x02\xA26\x04\xFC\xFF\x00\x01\x92")
+      serial_port.should_receive(:write).with([0x02, 0x40, 0x04, 0x00, 0x44].pack('c*'))
 
       SerialPort.should_receive(:new).and_return(serial_port)
-      subject.transmit(Hacklet::LockRequest.new)
+      subject.transmit(Hacklet::BootRequest.new)
     end
   end
 
