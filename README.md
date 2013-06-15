@@ -43,16 +43,15 @@ apt-get install libftdi1
 gem install hacklet
 ```
 
-**Note**: Depending on device permissions, it may be necessary to run the
-hacklet commands as root. However the preferred solution is to add the
-user running hacklet to the appropriate device groups to avoid running
-hacklet as root.
-
+**Note**: Depending on device permissions, it may be necessary to run
+hacklet as root. The preferred solution is to add the user running
+hacklet to the appropriate device groups to avoid running hacklet as
+root.
 
 ### Windows
 
 **Note**: These directions haven't been confirmed. If you can confirm
-them or improve them, please create an [issue] or send a pull request.
+them or improve them, please create an [issue][issues] or send a pull request.
 
 1. Install [7zip] in order to extract Zadiag.
 1. Download Zadig for [XP][zadiag-xp] or [later][zadiag-later].
