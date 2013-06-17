@@ -6,7 +6,7 @@ describe Hacklet::Command do
   end
 
   let(:dongle) do
-    serial_connection = mock('serial_port')
+    serial_connection = double('serial_port')
     Hacklet::Dongle.new(serial_connection, Logger.new("/dev/null"))
   end
 
