@@ -10,6 +10,7 @@ module Hacklet
       @connection.baudrate = 115200
       @connection.flowctrl = Ftdi::SIO_DISABLE_FLOW_CTRL
       @connection.dtr = 1
+      @connection.rts = 1
       @receive_buffer = ""
     end
 
