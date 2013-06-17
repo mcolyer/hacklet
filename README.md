@@ -41,12 +41,8 @@ gem install hacklet
 ```shell
 apt-get install libftdi1
 gem install hacklet
+echo 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="8c81", SUBSYSTEMS=="usb", ACTION=="add", MODE="0660", GROUP="plugdev"' | sudo tee /etc/udev/rules.d/99-thinkeco.rules
 ```
-
-**Note**: Depending on device permissions, it may be necessary to run
-hacklet as root. The preferred solution is to add the user running
-hacklet to the appropriate device groups to avoid running hacklet as
-root.
 
 ### Windows
 
