@@ -11,6 +11,7 @@ describe Hacklet::SerialConnection do
       serial_port.stub(:baudrate=).with(115200)
       serial_port.stub(:flowctrl=).with(Ftdi::SIO_DISABLE_FLOW_CTRL)
       serial_port.stub(:dtr=).with(1)
+      serial_port.stub(:rts=).with(1)
 
       Ftdi::Context.should_receive(:new).and_return(serial_port)
       subject
