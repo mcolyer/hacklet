@@ -55,7 +55,7 @@ You'll need:
 </p>
 
 <ul>
-<li>A computer running Linux (I use a <a href="http://www.amazon.com/gp/product/B009SQQF9C/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B009SQQF9C&linkCode=as2&tag=matcol01-20">Raspberry Pi</a>) with a spare USB port ~$45</li>
+<li>A computer with a spare USB port (I use a <a href="http://www.amazon.com/gp/product/B009SQQF9C/ref=as_li_ss_tl?ie=UTF8&camp=1789&creative=390957&creativeASIN=B009SQQF9C&linkCode=as2&tag=matcol01-20">Raspberry Pi</a> ~$45)</li>
 <li>A <a href="http://www.amazon.com/gp/product/B00AAT43OA/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00AAT43OA&linkCode=as2&tag=matcol-20">Modlet Starter Kit</a> ~$50</li>
 </ul>
 
@@ -64,7 +64,17 @@ Once you've got those materials you should be set. For a full walkthrough, watch
 href="http://youtu.be/rTn9QfW8NS8">demo video</a>. For the impatient read below.
 </p>
 
-<pre><code>gem install hacklet
+<pre><code># On Ubuntu/Debian based Linux
+sudo apt-get install libftdi1
+echo 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="8c81", SUBSYSTEMS=="usb", ACTION=="add", MODE="0660", GROUP="plugdev"' | sudo tee /etc/udev/rules.d/99-thinkeco.rules
+
+# On OSX
+brew install libftdi
+
+# For Windows see https://github.com/mcolyer/hacklet#windows
+
+# Now it's time to install hacklet
+gem install hacklet
 
 # Insert the dongle into the computer
 
