@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.add_dependency "serialport", "~>1.1.0"
+  gem.add_dependency "libftdi-ruby", "~>0.0.20"
   gem.add_dependency "bindata", "~>1.5.0"
   gem.add_dependency "slop", "~>3.4.0"
   gem.add_development_dependency "rake"
