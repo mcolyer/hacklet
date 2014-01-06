@@ -2,7 +2,7 @@ require 'ftdi'
 
 module Hacklet
   class SerialConnection
-    def initialize(logger, port='/dev/ttyUSB0')
+    def initialize(logger)
       @logger = logger
       @connection = Ftdi::Context.new
       @connection.usb_open(0x0403, 0x8c81)
