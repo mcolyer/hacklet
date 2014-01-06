@@ -66,10 +66,10 @@ href="http://youtu.be/rTn9QfW8NS8">demo video</a>. For the impatient read below.
 
 <pre><code># On Ubuntu/Debian based Linux
 sudo apt-get install libftdi1
-echo 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="8c81", SUBSYSTEMS=="usb", ACTION=="add", MODE="0660", GROUP="plugdev"' | sudo tee /etc/udev/rules.d/99-thinkeco.rules
+echo 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="8c81", SUBSYSTEMS=="usb", ACTION=="add", MODE="0660", GROUP="plugdev"' | sudo tee /lib/udev/rules.d/99-thinkeco.rules
 
 # On OSX
-brew install libftdi
+brew install libftdi0
 
 # For Windows see https://github.com/mcolyer/hacklet#windows
 
@@ -77,9 +77,6 @@ brew install libftdi
 gem install hacklet
 
 # Insert the dongle into the computer
-
-# Load the USB-to-serial kernel driver, this only works with Linux currently
-sudo modprobe ftdi_sio vendor=0x0403 product=0x8c81
 
 # Add the device to the network, keep a copy of the network ids (ie 0xDEED)
 hacklet commission
