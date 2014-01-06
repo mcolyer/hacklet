@@ -32,7 +32,7 @@ external services.
 ### Mac
 
 ```shell
-brew install libftdi
+brew install libftdi0
 gem install hacklet
 ```
 
@@ -41,7 +41,7 @@ gem install hacklet
 ```shell
 apt-get install libftdi1
 gem install hacklet
-echo 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="8c81", SUBSYSTEMS=="usb", ACTION=="add", MODE="0660", GROUP="plugdev"' | sudo tee /etc/udev/rules.d/99-thinkeco.rules
+echo 'ATTRS{idVendor}=="0403", ATTRS{idProduct}=="8c81", SUBSYSTEMS=="usb", ACTION=="add", MODE="0660", GROUP="plugdev"' | sudo tee /lib/udev/rules.d/99-thinkeco.rules
 ```
 
 ### Windows
